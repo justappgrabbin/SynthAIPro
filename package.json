@@ -14,7 +14,10 @@
     "vite": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "wouter": "latest",
+    "sonner": "latest",
+    "lucide-react": "latest"
   },
   "devDependencies": {}
 }
