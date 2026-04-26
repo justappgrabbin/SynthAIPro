@@ -6,7 +6,7 @@ import {
   synthiaApi,
 } from "../lib/synthiaApi";
 
-type SocketStatus = "connecting" | "connected" | "closed" | "error";
+type SocketStatus = "connecting" | "connected" | "closed" | "error" | "not_configured";
 
 export default function SynthiaConnection() {
   const [health, setHealth] = React.useState<any>(null);
@@ -51,16 +51,22 @@ export default function SynthiaConnection() {
       <strong>Synthia wires</strong>
 
       <p style={{ margin: "8px 0" }}>
-        API: <code>{SYNTHIA_API_URL}</code>
+        API: <code>{SYNTHIA_API_URL || "not configured"}</code>
       </p>
 
       <p style={{ margin: "8px 0" }}>
-        WS: <code>{SYNTHIA_WS_URL}</code>
+        WS: <code>{SYNTHIA_WS_URL || "not configured"}</code>
       </p>
 
       <p style={{ margin: "8px 0" }}>
-        Socket: <strong>{socketStatus}</strong>
+        Socket: <strong>{socketStatus.replace("_", " ")}</strong>
       </p>
+
+      {socketStatus === "not_configured" && (
+        <pre style={{ color: "#ffd98a", whiteSpace: "pre-wrap" }}>
+          Add VITE_SYNTHIA_API_URL and VITE_SYNTHIA_WS_URL to the deployment environment to enable live Synthia wires.
+        </pre>
+      )}
 
       {error && (
         <pre style={{ color: "#ff8a8a", whiteSpace: "pre-wrap" }}>{error}</pre>

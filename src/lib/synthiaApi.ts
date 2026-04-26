@@ -1,11 +1,28 @@
-export const SYNTHIA_API_URL =
-  import.meta.env.VITE_SYNTHIA_API_URL || "http://localhost:3002";
+const LOCAL_SYNTHIA_API_URL = "http://localhost:3002";
 
-export const SYNTHIA_WS_URL =
-  import.meta.env.VITE_SYNTHIA_WS_URL || `${SYNTHIA_API_URL.replace(/^http/, "ws")}/ws`;
+const configuredApiUrl = import.meta.env.VITE_SYNTHIA_API_URL;
+const configuredWsUrl = import.meta.env.VITE_SYNTHIA_WS_URL;
+
+const isBrowser = typeof window !== "undefined";
+const isLocalBrowser = isBrowser && ["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+export const SYNTHIA_API_URL = configuredApiUrl || (isLocalBrowser ? LOCAL_SYNTHIA_API_URL : "");
+
+export const SYNTHIA_WS_URL = configuredWsUrl || (SYNTHIA_API_URL ? `${SYNTHIA_API_URL.replace(/^http/, "ws")}/ws` : "");
+
+export const SYNTHIA_IS_CONFIGURED = Boolean(SYNTHIA_API_URL);
+
+function requireSynthiaApiUrl() {
+  if (!SYNTHIA_API_URL) {
+    throw new Error("Synthia API is not configured. Set VITE_SYNTHIA_API_URL and VITE_SYNTHIA_WS_URL in the deployment environment.");
+  }
+
+  return SYNTHIA_API_URL;
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${SYNTHIA_API_URL}${path}`, {
+  const apiUrl = requireSynthiaApiUrl();
+  const response = await fetch(`${apiUrl}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -37,13 +54,14 @@ export const synthiaApi = {
     }),
 
   upload: async (files: File[]) => {
+    const apiUrl = requireSynthiaApiUrl();
     const formData = new FormData();
 
     for (const file of files) {
       formData.append("files", file);
     }
 
-    const response = await fetch(`${SYNTHIA_API_URL}/api/upload`, {
+    const response = await fetch(`${apiUrl}/api/upload`, {
       method: "POST",
       body: formData,
     });
@@ -59,8 +77,13 @@ export const synthiaApi = {
 
 export function connectSynthiaSocket(
   onMessage: (message: any) => void,
-  onStatus?: (status: "connected" | "closed" | "error") => void
+  onStatus?: (status: "connected" | "closed" | "error" | "not_configured") => void
 ) {
+  if (!SYNTHIA_WS_URL) {
+    onStatus?.("not_configured");
+    return { close: () => undefined };
+  }
+
   const socket = new WebSocket(SYNTHIA_WS_URL);
 
   socket.onopen = () => onStatus?.("connected");
