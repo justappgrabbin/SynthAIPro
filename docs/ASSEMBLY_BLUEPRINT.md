@@ -13,15 +13,15 @@ The system must preserve functionality while learning from uploaded code, folder
 This distinction is non-negotiable:
 
 ```txt
-Address = a visitable place inside the OS.
-Glyph = a visible/callable capability inside a place.
+Address = an entity/location in the system that can be addressed, routed to, messaged, visited, or recognized as having a place in the mesh.
+Glyph = the visible/callable symbol for an entity, function, action, or capability.
 ```
 
-Addresses belong to pages/apps/destinations. A user can go there, return there, bookmark it, route to it, or receive broadcasts there.
+Addresses are not limited to pages. A human can have an address. An app can have an address. A service/function like Trident can also have an address when it is a real addressed entity in the system.
 
-Glyphs belong to functions/tools/capabilities. A glyph can appear in an addressable place, but the glyph itself is not usually a place. It is something the place can invoke.
+Glyphs are how the OS shows or invokes something. A glyph can point to an addressed entity, or it can invoke a smaller capability that does not need its own address.
 
-### Addressed places
+### Addressed places / entities
 
 ```txt
 Browser
@@ -31,9 +31,15 @@ Symbiont Circle
 The Grove
 Admin / Root
 Home / Dashboard
+Trident
+Cynthia
+MIR / Morph Memory
+Human users
+Agents
+Root entry points
 ```
 
-### Glyph-bearing functions
+### Glyph-bearing functions / capabilities
 
 ```txt
 Trident
@@ -57,21 +63,28 @@ Cynthia Node Call
 Cynthia Python Worker Call
 ```
 
+Important nuance:
+
+```txt
+Some things are both addressed entities and glyph-bearing functions.
+Trident is both.
+MIR may be both, depending on whether it is being routed to as a service or invoked as a capability.
+A human has an address, and may also have glyphs/actions attached to them.
+```
+
 Rule of thumb:
 
 ```txt
-Apps/pages are destinations.
-Functions are capabilities.
-Addresses are destinations.
-Glyphs are capabilities.
-Morph OS routes destinations to capabilities.
+Addresses identify entities/places/services in the mesh.
+Glyphs present capabilities/actions/entities to the user.
+Morph OS routes glyph invocation to addressed entities or local capabilities.
 ```
 
 ## Core system layers
 
 ```txt
 Morph OS
-  Interface/body: addressed apps/pages, smart browser, upload surfaces, terminal surfaces, app center, builder, playable outputs, morph controls
+  Interface/body: addressed apps/pages/entities, smart browser, upload surfaces, terminal surfaces, app center, builder, playable outputs, morph controls
 
 Cynthia Server - Node side
   API gateway, upload handling, zip extraction, routing, build orchestration, SSE/websocket realtime, static serving
@@ -79,10 +92,10 @@ Cynthia Server - Node side
 Cynthia Server - Python side
   Inference, deeper code analysis, learning routines, computational workers, MIR/ANN tasks where Python is best
 
-Trident function
+Trident addressed function/entity
   Full intelligence function: RAG, P2P, MCP/tool use, coding, math, research, gap filling, routing, synthesis, repair planning
 
-MIR / Morph Memory function
+MIR / Morph Memory addressed function/service
   Source-dominant morph function: indexed chunks, contracts, blueprints, exact/equivalent/morph_runtime/improved regeneration
 
 Learning / Orchestrator function
@@ -91,7 +104,9 @@ Learning / Orchestrator function
 
 ## Trident scope
 
-Trident is not just chat and it is not a standalone app/page/address.
+Trident is not just chat and it is not merely an app icon.
+
+Trident is an addressed intelligence function/entity.
 
 Trident includes:
 
@@ -114,17 +129,17 @@ Trident answers the question: **what should happen next, and how do we do it wit
 ```txt
 User opens an addressed place in Morph OS
   ↓
-That place presents glyphs for available functions
+That place presents glyphs for available functions/entities
   ↓
 User invokes a glyph/function such as upload, Trident, MIR, research, memory, build, or morph
   ↓
-Morph OS sends the request to Cynthia Node API
+Morph OS routes the invocation to an addressed entity/service or local capability
   ↓
-Node routes to MIR, Trident, Python workers, build runner, memory, or realtime mesh
+Cynthia Node routes to MIR, Trident, Python workers, build runner, memory, or realtime mesh
   ↓
 Realtime mesh streams status, logs, tokens, progress, and receiving-side morph updates
   ↓
-Morph OS updates the addressed place without pretending the function is itself a destination
+Morph OS updates the addressed place without flattening the addressed entity into a mere button
   ↓
 Learning layer records outcomes, reusable capabilities, failed assumptions, and improvement paths
 ```
@@ -136,7 +151,7 @@ SynthAIPro/
 ├── server/                  # Cynthia Node server: upload, extract, build, serve, API gateway, websocket
 ├── workers/                 # Cynthia Python workers: inference, learning, heavy analysis
 ├── web/                     # Morph OS frontend and address router
-├── apps/                    # Addressed places inside Morph OS
+├── apps/                    # User-facing addressed places inside Morph OS
 │   ├── browser/
 │   ├── you-n-i-verse/
 │   ├── stellar-proximology/
@@ -144,9 +159,9 @@ SynthAIPro/
 │   ├── grove/
 │   ├── admin-root/
 │   └── home/
-├── packages/                # Glyph-bearing functions and shared service clients
-│   ├── mir/                 # Morph MIR v3 source memory function
-│   ├── trident-client/      # Trident RAG/P2P/MCP/coding/math/research function wrapper
+├── packages/                # Addressed functions/services and shared service clients
+│   ├── mir/                 # Morph MIR v3 source memory function/service
+│   ├── trident-client/      # Trident RAG/P2P/MCP/coding/math/research client
 │   ├── realtime-client/     # Websocket client hooks and event contracts
 │   └── cynthia-client/      # Cynthia Node/Python function calls
 ├── modules/                 # Feature systems extracted after core loop works
@@ -183,14 +198,13 @@ SynthAIPro/
 ## Non-negotiables
 
 1. Do not replace the computational neural net with a graph visualizer.
-2. Do not shrink Trident into a chatbot or app icon. Trident is a glyph-bearing function that includes RAG, P2P, MCP, coding, math, research, and gap filling.
-3. Do not turn MIR into an app icon. MIR is a glyph-bearing source-preserving morph function.
-4. Do not give functions full addresses unless they become visitable pages.
-5. Do not remove upload, zip intake, code ingestion, reconstruction, morphing, learning, or orchestration behavior.
-6. Do not flatten prototypes into decorative UI only.
-7. Archive before replacing.
-8. Prefer a working full-stack loop over perfect architecture diagrams.
-9. Every morph result must report what was preserved, what changed, and what is missing.
+2. Do not shrink Trident into a chatbot or mere app icon. Trident is an addressed intelligence function/entity that includes RAG, P2P, MCP, coding, math, research, and gap filling.
+3. Do not flatten MIR into decoration. MIR is a source-preserving morph function/service and may be addressed when routed to as a service.
+4. Do not remove upload, zip intake, code ingestion, reconstruction, morphing, learning, or orchestration behavior.
+5. Do not flatten prototypes into decorative UI only.
+6. Archive before replacing.
+7. Prefer a working full-stack loop over perfect architecture diagrams.
+8. Every morph result must report what was preserved, what changed, and what is missing.
 
 ## MVP target
 
@@ -198,11 +212,11 @@ A full-stack deployment where the user can:
 
 1. Open Morph OS in the browser.
 2. Visit addressed places like Browser, You-N-I-Verse, Stellar Proximology, Symbiont Circle, Grove, Admin/Root, and Home.
-3. Invoke glyph-bearing functions from those places: upload, Trident, MIR, memory, research, build, morph, action log, realtime, etc.
+3. Invoke glyph-bearing functions/entities from those places: upload, Trident, MIR, memory, research, build, morph, action log, realtime, etc.
 4. Upload a zip or source file.
 5. See extracted files and detected project metadata.
-6. Run MIR analysis as a function.
-7. Ask Trident as a function to inspect, code, do math/research, fill gaps, or route work.
+6. Run MIR analysis as a function/service.
+7. Ask Trident as an addressed function/entity to inspect, code, do math/research, fill gaps, or route work.
 8. Trigger build if package scripts exist.
 9. Open playable build output.
 10. Generate morph modes: exact/equivalent/runtime/improved.
@@ -215,9 +229,9 @@ A full-stack deployment where the user can:
 3. Extract Python worker side into `workers/` if present, or create worker bridge stubs.
 4. Extract `morph-mir-system-v3.zip` into `packages/mir/`.
 5. Place strongest Morph OS UI into `web/`.
-6. Add address registry for Browser, You-N-I-Verse, Stellar Proximology, Symbiont Circle, Grove, Admin/Root, and Home.
+6. Add address registry for Browser, You-N-I-Verse, Stellar Proximology, Symbiont Circle, Grove, Admin/Root, Home, Trident, Cynthia, MIR, users, agents, and root entry points.
 7. Add glyph/function registry for Trident, MIR, upload, memory, realtime, research, build, morph, and orchestration.
 8. Add realtime websocket client/server contracts.
-9. Wire addressed places to glyph-bearing functions.
+9. Wire addressed places to glyph-bearing functions and addressed entities.
 10. Wire Cynthia Node to MIR + Python workers + Trident.
 11. Archive all old prototypes under `prototypes/`.
